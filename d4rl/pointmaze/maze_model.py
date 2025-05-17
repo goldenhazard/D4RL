@@ -30,7 +30,7 @@ def parse_maze(maze_str):
     return maze_arr
 
 
-def point_maze(maze_str):
+def point_maze(maze_str, pad_wall=0.0):
     maze_arr = parse_maze(maze_str)
 
     mjcmodel = MJCModel('point_maze')
@@ -56,7 +56,7 @@ def point_maze(maze_str):
     worldbody = mjcmodel.root.worldbody()
     worldbody.geom(name='ground',size="40 40 0.25",pos="0 0 -0.1",type="plane",contype=1,conaffinity=0,material="groundplane")
 
-    particle = worldbody.body(name='particle', pos=[1.2,1.2,0])
+    particle = worldbody.body(name='particle', pos=[1, 1, 0])
     particle.geom(name='particle_geom', type='sphere', size=0.1, rgba='0.0 0.0 1.0 0.0', contype=1)
     particle.site(name='particle_site', pos=[0.0,0.0,0], size=0.2, rgba='0.3 0.6 0.3 1')
     particle.joint(name='ball_x', type='slide', pos=[0,0,0], axis=[1,0,0])
@@ -68,12 +68,15 @@ def point_maze(maze_str):
     for w in range(width):
         for h in range(height):
             if maze_arr[w,h] == WALL:
+                size = [0.50, 0.50, 0.2]
+                size[0] += pad_wall
+                size[1] += pad_wall
                 worldbody.geom(conaffinity=1,
                                type='box',
                                name='wall_%d_%d'%(w,h),
                                material='wall',
                                pos=[w+1.0,h+1.0,0],
-                               size=[0.5,0.5,0.2])
+                               size=size)
 
     actuator = mjcmodel.root.actuator()
     actuator.motor(joint="ball_x", ctrlrange=[-1.0, 1.0], ctrllimited=True, gear=100)
@@ -91,6 +94,83 @@ LARGE_MAZE = \
         "#OO#O#OOOOO#\\"+\
         "##O#O#O#O###\\"+\
         "#OO#OOO#OGO#\\"+\
+        "############"
+
+LARGE_MAZE_PAD005 = \
+        "############\\"+\
+        "#OOOO#OOOOO#\\"+\
+        "#O##O#O#O#O#\\"+\
+        "#OOOOOO#OOO#\\"+\
+        "#O####O###O#\\"+\
+        "#OO#O#OOOOO#\\"+\
+        "##O#O#O#O###\\"+\
+        "#OO#OOO#OGO#\\"+\
+        "############PAD0.05"
+
+LARGE_MAZE_PAD010 = \
+        "############\\"+\
+        "#OOOO#OOOOO#\\"+\
+        "#O##O#O#O#O#\\"+\
+        "#OOOOOO#OOO#\\"+\
+        "#O####O###O#\\"+\
+        "#OO#O#OOOOO#\\"+\
+        "##O#O#O#O###\\"+\
+        "#OO#OOO#OGO#\\"+\
+        "############PAD0.10"
+
+LARGE_MAZE_PAD015 = \
+        "############\\"+\
+        "#OOOO#OOOOO#\\"+\
+        "#O##O#O#O#O#\\"+\
+        "#OOOOOO#OOO#\\"+\
+        "#O####O###O#\\"+\
+        "#OO#O#OOOOO#\\"+\
+        "##O#O#O#O###\\"+\
+        "#OO#OOO#OGO#\\"+\
+        "############PAD0.15"
+
+LARGE_MAZE_PAD020 = \
+        "############\\"+\
+        "#OOOO#OOOOO#\\"+\
+        "#O##O#O#O#O#\\"+\
+        "#OOOOOO#OOO#\\"+\
+        "#O####O###O#\\"+\
+        "#OO#O#OOOOO#\\"+\
+        "##O#O#O#O###\\"+\
+        "#OO#OOO#OGO#\\"+\
+        "############PAD0.20"
+
+LARGE_MAZE_PAD025 = \
+        "############\\"+\
+        "#OOOO#OOOOO#\\"+\
+        "#O##O#O#O#O#\\"+\
+        "#OOOOOO#OOO#\\"+\
+        "#O####O###O#\\"+\
+        "#OO#O#OOOOO#\\"+\
+        "##O#O#O#O###\\"+\
+        "#OO#OOO#OGO#\\"+\
+        "############PAD0.25"
+
+LARGE_MAZE_PAD030 = \
+        "############\\"+\
+        "#OOOO#OOOOO#\\"+\
+        "#O##O#O#O#O#\\"+\
+        "#OOOOOO#OOO#\\"+\
+        "#O####O###O#\\"+\
+        "#OO#O#OOOOO#\\"+\
+        "##O#O#O#O###\\"+\
+        "#OO#OOO#OGO#\\"+\
+        "############PAD0.30"
+
+LARGE_MAZE_OPEN = \
+        "############\\"+\
+        "#OOOOOOOOOO#\\"+\
+        "#OOOOOOOOOO#\\"+\
+        "#OOOOOOOOOO#\\"+\
+        "#OOOOOOOOOO#\\"+\
+        "#OOOOOOOOOO#\\"+\
+        "#OOOOOOOOOO#\\"+\
+        "#OOOOOOOOGO#\\"+\
         "############"
 
 LARGE_MAZE_EVAL = \
@@ -112,6 +192,26 @@ MEDIUM_MAZE = \
         '#OO#OOO#\\'+\
         '#O#OO#O#\\'+\
         '#OOO#OG#\\'+\
+        "########"
+
+MEDIUM_MAZE_UNSAFE  = \
+        '########\\'+\
+        '#OO##OO#\\'+\
+        '##O#OO##\\'+\
+        '##O#O###\\'+\
+        '#OO#OOO#\\'+\
+        '#O#OO#O#\\'+\
+        '#OOO#OG#\\'+\
+        "########"
+
+MEDIUM_MAZE_OPEN  = \
+        '########\\'+\
+        '#OOOOOO#\\'+\
+        '#OOOOOO#\\'+\
+        '#OOOOOO#\\'+\
+        '#OOOOOO#\\'+\
+        '#OOOOOO#\\'+\
+        '#OOOOOG#\\'+\
         "########"
 
 MEDIUM_MAZE_EVAL = \
@@ -170,7 +270,14 @@ class MazeEnv(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
 
         self._target = np.array([0.0,0.0])
 
-        model = point_maze(maze_spec)
+        if "PAD" in maze_spec:
+            pad_wall  = float(maze_spec.split("PAD")[1])
+            maze_spec = maze_spec.split("PAD")[0]
+            model = point_maze(maze_spec, pad_wall)
+        else:
+            model = point_maze(maze_spec)
+
+        
         with model.asfile() as f:
             mujoco_env.MujocoEnv.__init__(self, model_path=f.name, frame_skip=1)
         utils.EzPickle.__init__(self)
@@ -219,10 +326,13 @@ class MazeEnv(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         self.data.site_xpos[self.model.site_name2id('target_site')] = np.array([self._target[0]+1, self._target[1]+1, 0.0])
 
     def clip_velocity(self):
-        qvel = np.clip(self.sim.data.qvel, -5.0, 5.0)
+        # qvel = np.clip(self.sim.data.qvel, -5.0, 5.0)
+        # HACK: we should not do this but decreasing the velocity bound from 5 to 2
+        qvel = np.clip(self.sim.data.qvel, -4.5, 4.5)
         self.set_state(self.sim.data.qpos, qvel)
 
     def reset_model(self):
+        self.np_random
         idx = self.np_random.choice(len(self.empty_and_goal_locations))
         reset_location = np.array(self.empty_and_goal_locations[idx]).astype(self.observation_space.dtype)
         qpos = reset_location + self.np_random.uniform(low=-.1, high=.1, size=self.model.nq)
