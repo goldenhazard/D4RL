@@ -84,7 +84,6 @@ def point_maze(maze_str, pad_wall=0.0):
 
     return mjcmodel
 
-
 LARGE_MAZE = \
         "############\\"+\
         "#OOOO#OOOOO#\\"+\
@@ -96,7 +95,8 @@ LARGE_MAZE = \
         "#OO#OOO#OGO#\\"+\
         "############"
 
-LARGE_MAZE_PAD005 = \
+for pad in [0.05, 0.10, 0.15, 0.20, 0.25, 0.30]:
+    globals()[f'LARGE_MAZE_PAD{int(pad*100):03d}'] = \
         "############\\"+\
         "#OOOO#OOOOO#\\"+\
         "#O##O#O#O#O#\\"+\
@@ -105,62 +105,18 @@ LARGE_MAZE_PAD005 = \
         "#OO#O#OOOOO#\\"+\
         "##O#O#O#O###\\"+\
         "#OO#OOO#OGO#\\"+\
-        "############PAD0.05"
-
-LARGE_MAZE_PAD010 = \
-        "############\\"+\
-        "#OOOO#OOOOO#\\"+\
-        "#O##O#O#O#O#\\"+\
-        "#OOOOOO#OOO#\\"+\
-        "#O####O###O#\\"+\
-        "#OO#O#OOOOO#\\"+\
-        "##O#O#O#O###\\"+\
-        "#OO#OOO#OGO#\\"+\
-        "############PAD0.10"
-
-LARGE_MAZE_PAD015 = \
-        "############\\"+\
-        "#OOOO#OOOOO#\\"+\
-        "#O##O#O#O#O#\\"+\
-        "#OOOOOO#OOO#\\"+\
-        "#O####O###O#\\"+\
-        "#OO#O#OOOOO#\\"+\
-        "##O#O#O#O###\\"+\
-        "#OO#OOO#OGO#\\"+\
-        "############PAD0.15"
-
-LARGE_MAZE_PAD020 = \
-        "############\\"+\
-        "#OOOO#OOOOO#\\"+\
-        "#O##O#O#O#O#\\"+\
-        "#OOOOOO#OOO#\\"+\
-        "#O####O###O#\\"+\
-        "#OO#O#OOOOO#\\"+\
-        "##O#O#O#O###\\"+\
-        "#OO#OOO#OGO#\\"+\
-        "############PAD0.20"
-
-LARGE_MAZE_PAD025 = \
-        "############\\"+\
-        "#OOOO#OOOOO#\\"+\
-        "#O##O#O#O#O#\\"+\
-        "#OOOOOO#OOO#\\"+\
-        "#O####O###O#\\"+\
-        "#OO#O#OOOOO#\\"+\
-        "##O#O#O#O###\\"+\
-        "#OO#OOO#OGO#\\"+\
-        "############PAD0.25"
-
-LARGE_MAZE_PAD030 = \
-        "############\\"+\
-        "#OOOO#OOOOO#\\"+\
-        "#O##O#O#O#O#\\"+\
-        "#OOOOOO#OOO#\\"+\
-        "#O####O###O#\\"+\
-        "#OO#O#OOOOO#\\"+\
-        "##O#O#O#O###\\"+\
-        "#OO#OOO#OGO#\\"+\
-        "############PAD0.30"
+        "############PAD" + str(pad)
+    
+for pad in [0.05, 0.10, 0.15, 0.20, 0.25, 0.30]:
+    globals()[f'MEDIUM_MAZE_PAD{int(pad*100):03d}'] = \
+        '########\\'+\
+        '#OO##OO#\\'+\
+        '#OO#OOO#\\'+\
+        '##OOO###\\'+\
+        '#OO#OOO#\\'+\
+        '#O#OO#O#\\'+\
+        '#OOO#OG#\\'+\
+        "########PAD" + str(pad)
 
 LARGE_MAZE_OPEN = \
         "############\\"+\
